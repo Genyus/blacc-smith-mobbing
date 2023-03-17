@@ -37,7 +37,7 @@ const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
 };
 
 /**
- * 
+ *
  * @param input A single-character string representing the play by myself or the opponent
  * @returns The score earned for the player's chosen play
  */
@@ -69,24 +69,22 @@ const calculateTotal = (input: string) => {
       .split("\n")
       .filter((singleLine) => singleLine.length > 0)
       .reduce((runningTotal, singleLine): number => {
-        // So now what do we do? This is a single line...
-        // This would look like 'A Y', or 'B X', etc...
-
-        // This would look like opponent = 'A'; me = 'Y'
-        const [opponent, me] = singleLine.trim().split(" ");
-        const myScore: PlayScore = getPlayScore(me);
-        const opponentScore: PlayScore = getPlayScore(opponent);
+        // singleLine would look like 'A Y', or 'B X', etc...
+        // Destructure the line into the scores earned by each player for this round
+        const [opponentScore, myScore] = singleLine
+          .trim()
+          .split(" ")
+          .map((token) => getPlayScore(token));
 
         // Make sure both plays are valid
         if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
-          const roundPoints: number =
-            myScore + calculateResultScore(myScore, opponentScore);
-
-          return (runningTotal += roundPoints);
+          return (runningTotal +=
+            myScore + calculateResultScore(myScore, opponentScore));
         } else {
           console.error(
-            "One or more invalid plays were passed, try Limbo instead!"
+            `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
           );
+          
           return 0;
         }
       }, 0);
