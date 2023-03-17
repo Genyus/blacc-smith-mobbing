@@ -78,15 +78,15 @@ const calculateTotal = (input: string) => {
 
         // Make sure both plays are valid
         if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
-          return (runningTotal +=
-            myScore + calculateResultScore(myScore, opponentScore));
+          runningTotal +=
+            myScore + calculateResultScore(myScore, opponentScore);
         } else {
           console.error(
             `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
           );
-
-          return INVALID_SCORE;
         }
+        
+        return runningTotal;
       }, 0);
     console.info("Total:", total);
   } catch (err) {
