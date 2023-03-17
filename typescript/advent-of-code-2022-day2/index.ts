@@ -6,58 +6,92 @@
 /**
  * Represents all possible play scores
  */
-type PlayScore = 0 | 1 | 2 | 3;
+type PlayScore = -1 | 1 | 2 | 3;
 /**
  * Represents all possible round result scores
  */
-type ResultScore = 6 | 3 | 0;
+type ResultScore = 6 | 3 | 0 | -1;
 
 const ROCK_SCORE: PlayScore = 1;
 const PAPER_SCORE: PlayScore = 2;
 const SCISSORS_SCORE: PlayScore = 3;
-const INVALID_SCORE: PlayScore = 0;
+const INVALID_SCORE: PlayScore = -1;
 const WIN_SCORE: ResultScore = 6;
 const DRAW_SCORE: ResultScore = 3;
 const LOSE_SCORE: ResultScore = 0;
 
 /**
- * Calculates the score for the result of this round
- * @param myScore score earned for my play in current round
- * @param theirScore score earned by opponent's play in current round
- * @returns points earned for win, draw or loss
+ * Gets the correct play score based on the opponent's play and desired result
+ * @param targetResult The desired result for this round
+ * @param theirScore The score of the opponent's play
+ * @returns The score for the correct play
  */
-const calculateResultScore = (myScore: PlayScore, theirScore: PlayScore): ResultScore => {
-  if (
-    (myScore === ROCK_SCORE && theirScore === SCISSORS_SCORE) ||
-    (myScore === PAPER_SCORE && theirScore === ROCK_SCORE) ||
-    (myScore === SCISSORS_SCORE && theirScore === PAPER_SCORE)
-  ) {
-    return WIN_SCORE;
-  } else if (myScore === theirScore) {
-    return DRAW_SCORE;
-  } else {
-    return LOSE_SCORE;
+const getTargetScore = (targetResult: ResultScore, theirScore: PlayScore): PlayScore => {
+  switch (targetResult) {
+    case LOSE_SCORE:
+      switch (theirScore) {
+        case ROCK_SCORE:
+          return SCISSORS_SCORE;
+        case PAPER_SCORE:
+          return ROCK_SCORE;
+        case SCISSORS_SCORE:
+          return PAPER_SCORE;
+        default:
+          return INVALID_SCORE;
+      }
+    case DRAW_SCORE:
+      return theirScore;
+    case WIN_SCORE:
+      switch (theirScore) {
+        case ROCK_SCORE:
+          return PAPER_SCORE;
+        case PAPER_SCORE:
+          return SCISSORS_SCORE;
+        case SCISSORS_SCORE:
+          return ROCK_SCORE;
+        default:
+          return INVALID_SCORE;
+      }
+    default:
+      console.error("Target result symbol is invalid!", input);
+      return INVALID_SCORE;
   }
 };
 
 /**
- *
+ * Gets the score for a specific play symbol
  * @param input A single-character string representing the play by myself or the opponent
  * @returns The score earned for the player's chosen play
  */
 const getPlayScore = (input: string): PlayScore => {
   switch (input) {
     case "A":
-    case "X":
       return ROCK_SCORE;
     case "B":
-    case "Y":
       return PAPER_SCORE;
     case "C":
-    case "Z":
       return SCISSORS_SCORE;
     default:
       console.error("Player has provided an invalid input!", input);
+      return INVALID_SCORE;
+  }
+};
+
+/**
+ * Gets the desired result from a specific result symbol
+ * @param input A single-character string representing the desired result
+ * @returns The target score earned result of the current round
+ */
+const getTargetResult = (input: string): ResultScore => {
+  switch (input) {
+    case "X":
+      return LOSE_SCORE;
+    case "Y":
+      return DRAW_SCORE;
+    case "Z":
+      return WIN_SCORE;
+    default:
+      console.error("Target result symbol is invalid!", input);
       return INVALID_SCORE;
   }
 };
@@ -74,16 +108,25 @@ const calculateTotal = (input: string) => {
       .filter((singleLine) => singleLine.length > 0) // filter out any empty lines
       .reduce((runningTotal, singleLine): number => {
         // singleLine would look like 'A Y', or 'B X', etc...
-        // Destructure the line into the scores earned by each player for this round
-        const [theirScore, myScore] = singleLine
+        // Destructure the line into the opponent's score and the target result
+        const tokens = singleLine
           .trim()
-          .split(" ")
-          .map((token) => getPlayScore(token));
+          .split(" ");
+        
+        if (tokens.length < 2) {
+          console.error(
+            `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
+          );
 
-        // Make sure both plays are valid
-        if (myScore !== INVALID_SCORE && theirScore !== INVALID_SCORE) {
+          return runningTotal;
+        }
+
+        const theirScore = getPlayScore(tokens[0]), targetResult = getTargetResult(tokens[1]);
+
+        // Make sure both inputs are valid
+        if (targetResult !== INVALID_SCORE && theirScore !== INVALID_SCORE) {
           runningTotal +=
-            myScore + calculateResultScore(myScore, theirScore);
+            targetResult + getTargetScore(targetResult, theirScore);
         } else {
           console.error(
             `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
