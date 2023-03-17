@@ -44,7 +44,7 @@ const getPlayScore = (input: string): PlayScore => {
       return INVALID_SCORE;
   }
 };
-const getTotal = (input: string) => {
+const calculateTotal = (input: string) => {
   try {
     // Total number of *our* points across all rounds.
     const total = input
@@ -2580,4 +2580,4 @@ A Z
 A Z
 B Y
 `;
-getTotal(input);
+calculateTotal(input);
