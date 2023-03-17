@@ -18,18 +18,18 @@ const LOSE_SCORE: ResultScore = 0;
 
 /**
  * Calculates the score for the result of this round
- * @param myPlay score earned for my play in current round
- * @param opponentPlay score earned by opponent's play in current round
+ * @param myScore score earned for my play in current round
+ * @param theirScore score earned by opponent's play in current round
  * @returns points earned for win, draw or loss
  */
-const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
+const calculateResultScore = (myScore: PlayScore, theirScore: PlayScore) => {
   if (
-    (myPlay === ROCK_SCORE && opponentPlay === SCISSORS_SCORE) ||
-    (myPlay === PAPER_SCORE && opponentPlay === ROCK_SCORE) ||
-    (myPlay === SCISSORS_SCORE && opponentPlay === PAPER_SCORE)
+    (myScore === ROCK_SCORE && theirScore === SCISSORS_SCORE) ||
+    (myScore === PAPER_SCORE && theirScore === ROCK_SCORE) ||
+    (myScore === SCISSORS_SCORE && theirScore === PAPER_SCORE)
   ) {
     return WIN_SCORE;
-  } else if (myPlay === opponentPlay) {
+  } else if (myScore === theirScore) {
     return DRAW_SCORE;
   } else {
     return LOSE_SCORE;
@@ -71,15 +71,15 @@ const calculateTotal = (input: string) => {
       .reduce((runningTotal, singleLine): number => {
         // singleLine would look like 'A Y', or 'B X', etc...
         // Destructure the line into the scores earned by each player for this round
-        const [opponentScore, myScore] = singleLine
+        const [theirScore, myScore] = singleLine
           .trim()
           .split(" ")
           .map((token) => getPlayScore(token));
 
         // Make sure both plays are valid
-        if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
+        if (myScore !== INVALID_SCORE && theirScore !== INVALID_SCORE) {
           runningTotal +=
-            myScore + calculateResultScore(myScore, opponentScore);
+            myScore + calculateResultScore(myScore, theirScore);
         } else {
           console.error(
             `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
