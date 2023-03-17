@@ -3,11 +3,18 @@
 /*
 * Types/Interfaces
 */
-// Possible plays
-type PlayType = 'rock' | 'paper' | 'scissors' | null;
-// Possible scores
+// Possible play scores
 type PlayScore = 0 | 1 | 2 | 3;
+// Possible result scores
+type ResultScore = 6 | 3 | 0;
 
+const ROCK_SCORE: PlayScore = 1;
+const PAPER_SCORE: PlayScore = 2;
+const SCISSORS_SCORE: PlayScore = 3;
+const INVALID_SCORE: PlayScore = 0;
+const WIN_SCORE: ResultScore = 6;
+const DRAW_SCORE: ResultScore = 3;
+const LOSE_SCORE: ResultScore = 0;
 const getTotal = (input: string) => {
   try {
     // Total number of *our* points across all rounds.
@@ -15,59 +22,43 @@ const getTotal = (input: string) => {
       // So now what do we do? This is a single line...
       // This would look like 'A Y', or 'B X', etc...
     
-      // TODO Split by space
       // This would look like opponent = 'A'; me = 'Y'
-      // Is opponent input always first?
       const [opponent, me] = singleLine.trim().split(' ');
-      const getPlay = (input: string): PlayType => {
+      const getPlayScore = (input: string): PlayScore => {
         switch (input) {
           case 'A':
           case 'X':
-            return 'rock';
+            return ROCK_SCORE;
           case 'B':
           case 'Y':
-            return 'paper';
+            return PAPER_SCORE;
           case 'C':
           case 'Z':
-            return 'scissors';
+            return SCISSORS_SCORE;
           default:
             console.error('Player has provided an invalid input!', input);
-            return null;
+            return INVALID_SCORE;
         }
       }
-      const myPlay: PlayType = getPlay(me); // 'rock'
-      const opponentPlay: PlayType = getPlay(opponent); // 'scissors'
+      const myScore: PlayScore = getPlayScore(me);
+      const opponentScore: PlayScore = getPlayScore(opponent);
   
       // Make sure both plays are valid
-      if (myPlay && opponentPlay) {
-        const calculatePlayScore = (play: string): PlayScore => {
-          switch (play) {
-            case 'rock':
-              return 1;
-            case 'paper':
-              return 2;
-            case 'scissors':
-              return 3;
-            default:
-              console.error('Invalid score value!');
-          }
-          return 0;
-        }
-      
-        const calculateResultScore = (myPlay: PlayType, opponentPlay: PlayType) => {
+      if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
+        const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
           if (
-            (myPlay === 'rock' && opponentPlay === 'scissors') ||
-            (myPlay === 'paper' && opponentPlay === 'rock') ||
-            (myPlay === 'scissors' && opponentPlay === 'paper')
+            (myPlay === ROCK_SCORE && opponentPlay === SCISSORS_SCORE) ||
+            (myPlay === PAPER_SCORE && opponentPlay === ROCK_SCORE) ||
+            (myPlay === SCISSORS_SCORE && opponentPlay === PAPER_SCORE)
           ) {
-            return 6;
+            return WIN_SCORE;
           } else if (myPlay === opponentPlay) {
-            return 3;
+            return DRAW_SCORE;
           } else {
-            return 0;
+            return LOSE_SCORE;
           }
         }
-        const roundPoints: number = calculatePlayScore(myPlay) + calculateResultScore(myPlay, opponentPlay);
+        const roundPoints: number = myScore + calculateResultScore(myScore, opponentScore);
 
         return runningTotal += roundPoints;
       } else {
