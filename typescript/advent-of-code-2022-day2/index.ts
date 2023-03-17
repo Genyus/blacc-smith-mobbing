@@ -15,6 +15,13 @@ const INVALID_SCORE: PlayScore = 0;
 const WIN_SCORE: ResultScore = 6;
 const DRAW_SCORE: ResultScore = 3;
 const LOSE_SCORE: ResultScore = 0;
+
+/**
+ * Calculates the score for the result of this round
+ * @param myPlay score earned for my play in current round
+ * @param opponentPlay score earned by opponent's play in current round
+ * @returns points earned for win, draw or loss
+ */
 const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
   if (
     (myPlay === ROCK_SCORE && opponentPlay === SCISSORS_SCORE) ||
@@ -28,6 +35,12 @@ const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
     return LOSE_SCORE;
   }
 };
+
+/**
+ * 
+ * @param input A single-character string representing the play by myself or the opponent
+ * @returns The score earned for the player's chosen play
+ */
 const getPlayScore = (input: string): PlayScore => {
   switch (input) {
     case "A":
@@ -44,6 +57,11 @@ const getPlayScore = (input: string): PlayScore => {
       return INVALID_SCORE;
   }
 };
+
+/**
+ * Calculates the total score for current player
+ * @param input A multiline string containing the plays for every round of the game
+ */
 const calculateTotal = (input: string) => {
   try {
     // Total number of *our* points across all rounds.
