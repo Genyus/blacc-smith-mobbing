@@ -3,9 +3,13 @@
 /*
  * Types/Interfaces
  */
-// Possible play scores
+/**
+ * Represents all possible play scores
+ */
 type PlayScore = 0 | 1 | 2 | 3;
-// Possible result scores
+/**
+ * Represents all possible round result scores
+ */
 type ResultScore = 6 | 3 | 0;
 
 const ROCK_SCORE: PlayScore = 1;
@@ -22,7 +26,7 @@ const LOSE_SCORE: ResultScore = 0;
  * @param theirScore score earned by opponent's play in current round
  * @returns points earned for win, draw or loss
  */
-const calculateResultScore = (myScore: PlayScore, theirScore: PlayScore) => {
+const calculateResultScore = (myScore: PlayScore, theirScore: PlayScore): ResultScore => {
   if (
     (myScore === ROCK_SCORE && theirScore === SCISSORS_SCORE) ||
     (myScore === PAPER_SCORE && theirScore === ROCK_SCORE) ||
@@ -67,7 +71,7 @@ const calculateTotal = (input: string) => {
     // Total number of *our* points across all rounds.
     const total = input
       .split("\n")
-      .filter((singleLine) => singleLine.length > 0)
+      .filter((singleLine) => singleLine.length > 0) // filter out any empty lines
       .reduce((runningTotal, singleLine): number => {
         // singleLine would look like 'A Y', or 'B X', etc...
         // Destructure the line into the scores earned by each player for this round
