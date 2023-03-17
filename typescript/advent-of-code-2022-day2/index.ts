@@ -26,7 +26,10 @@ const LOSE_SCORE: ResultScore = 0;
  * @param theirScore The score of the opponent's play
  * @returns The score for the correct play
  */
-const getTargetScore = (targetResult: ResultScore, theirScore: PlayScore): PlayScore => {
+const getTargetScore = (
+  targetResult: ResultScore,
+  theirScore: PlayScore
+): PlayScore => {
   switch (targetResult) {
     case LOSE_SCORE:
       switch (theirScore) {
@@ -109,10 +112,8 @@ const calculateTotal = (input: string) => {
       .reduce((runningTotal, singleLine): number => {
         // singleLine would look like 'A Y', or 'B X', etc...
         // Destructure the line into the opponent's score and the target result
-        const tokens = singleLine
-          .trim()
-          .split(" ");
-        
+        const tokens = singleLine.trim().split(" ");
+
         if (tokens.length < 2) {
           console.error(
             `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
@@ -121,7 +122,8 @@ const calculateTotal = (input: string) => {
           return runningTotal;
         }
 
-        const theirScore = getPlayScore(tokens[0]), targetResult = getTargetResult(tokens[1]);
+        const theirScore = getPlayScore(tokens[0]),
+          targetResult = getTargetResult(tokens[1]);
 
         // Make sure both inputs are valid
         if (targetResult !== INVALID_SCORE && theirScore !== INVALID_SCORE) {
@@ -132,7 +134,7 @@ const calculateTotal = (input: string) => {
             `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
           );
         }
-        
+
         return runningTotal;
       }, 0);
     console.info("Total:", total);
