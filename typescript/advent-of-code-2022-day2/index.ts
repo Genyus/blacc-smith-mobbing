@@ -11,10 +11,7 @@ type PlayScore = 0 | 1 | 2 | 3;
 const getTotal = (input: string) => {
   try {
     // Total number of *our* points across all rounds.
-    let runningTotal: number = 0;
-    
-    //TODO Split string by line
-    input.split('\n').filter(singleLine => singleLine.length > 0).forEach(singleLine => {
+    const total = input.split('\n').filter(singleLine => singleLine.length > 0).reduce((runningTotal, singleLine): number => {
       // So now what do we do? This is a single line...
       // This would look like 'A Y', or 'B X', etc...
     
@@ -72,12 +69,13 @@ const getTotal = (input: string) => {
         }
         const roundPoints: number = calculatePlayScore(myPlay) + calculateResultScore(myPlay, opponentPlay);
 
-        runningTotal += roundPoints;
+        return runningTotal += roundPoints;
       } else {
         console.error('One or more invalid plays were passed, try Limbo instead!');
+        return 0;
       }
-    });
-    console.info('Running total after loop completes:', runningTotal);
+    }, 0);
+    console.info('Running total after loop completes:', total);
   } catch (err) {
     console.error('Unexpected error while iterating over input.', err);
   }
