@@ -84,8 +84,8 @@ const calculateTotal = (input: string) => {
           console.error(
             `One or more invalid plays were found: "${singleLine}", try Limbo instead!`
           );
-          
-          return 0;
+
+          return INVALID_SCORE;
         }
       }, 0);
     console.info("Total:", total);
