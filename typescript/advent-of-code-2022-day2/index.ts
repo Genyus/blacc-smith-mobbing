@@ -1,8 +1,8 @@
 // https://adventofcode.com/2022/day/2
 
 /*
-* Types/Interfaces
-*/
+ * Types/Interfaces
+ */
 // Possible play scores
 type PlayScore = 0 | 1 | 2 | 3;
 // Possible result scores
@@ -27,50 +27,56 @@ const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
   } else {
     return LOSE_SCORE;
   }
-}
+};
 const getPlayScore = (input: string): PlayScore => {
   switch (input) {
-    case 'A':
-    case 'X':
+    case "A":
+    case "X":
       return ROCK_SCORE;
-    case 'B':
-    case 'Y':
+    case "B":
+    case "Y":
       return PAPER_SCORE;
-    case 'C':
-    case 'Z':
+    case "C":
+    case "Z":
       return SCISSORS_SCORE;
     default:
-      console.error('Player has provided an invalid input!', input);
+      console.error("Player has provided an invalid input!", input);
       return INVALID_SCORE;
   }
-}
+};
 const getTotal = (input: string) => {
   try {
     // Total number of *our* points across all rounds.
-    const total = input.split('\n').filter(singleLine => singleLine.length > 0).reduce((runningTotal, singleLine): number => {
-      // So now what do we do? This is a single line...
-      // This would look like 'A Y', or 'B X', etc...
-    
-      // This would look like opponent = 'A'; me = 'Y'
-      const [opponent, me] = singleLine.trim().split(' ');
-      const myScore: PlayScore = getPlayScore(me);
-      const opponentScore: PlayScore = getPlayScore(opponent);
-  
-      // Make sure both plays are valid
-      if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
-        const roundPoints: number = myScore + calculateResultScore(myScore, opponentScore);
+    const total = input
+      .split("\n")
+      .filter((singleLine) => singleLine.length > 0)
+      .reduce((runningTotal, singleLine): number => {
+        // So now what do we do? This is a single line...
+        // This would look like 'A Y', or 'B X', etc...
 
-        return runningTotal += roundPoints;
-      } else {
-        console.error('One or more invalid plays were passed, try Limbo instead!');
-        return 0;
-      }
-    }, 0);
-    console.info('Running total after loop completes:', total);
+        // This would look like opponent = 'A'; me = 'Y'
+        const [opponent, me] = singleLine.trim().split(" ");
+        const myScore: PlayScore = getPlayScore(me);
+        const opponentScore: PlayScore = getPlayScore(opponent);
+
+        // Make sure both plays are valid
+        if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
+          const roundPoints: number =
+            myScore + calculateResultScore(myScore, opponentScore);
+
+          return (runningTotal += roundPoints);
+        } else {
+          console.error(
+            "One or more invalid plays were passed, try Limbo instead!"
+          );
+          return 0;
+        }
+      }, 0);
+    console.info("Running total after loop completes:", total);
   } catch (err) {
-    console.error('Unexpected error while iterating over input.', err);
+    console.error("Unexpected error while iterating over input.", err);
   }
-}
+};
 
 // Input values copied from https://adventofcode.com/2022/day/2/input
 const input: string = `C Z
@@ -2573,5 +2579,5 @@ C Y
 A Z
 A Z
 B Y
-`
+`;
 getTotal(input);
