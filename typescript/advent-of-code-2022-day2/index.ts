@@ -15,6 +15,35 @@ const INVALID_SCORE: PlayScore = 0;
 const WIN_SCORE: ResultScore = 6;
 const DRAW_SCORE: ResultScore = 3;
 const LOSE_SCORE: ResultScore = 0;
+const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
+  if (
+    (myPlay === ROCK_SCORE && opponentPlay === SCISSORS_SCORE) ||
+    (myPlay === PAPER_SCORE && opponentPlay === ROCK_SCORE) ||
+    (myPlay === SCISSORS_SCORE && opponentPlay === PAPER_SCORE)
+  ) {
+    return WIN_SCORE;
+  } else if (myPlay === opponentPlay) {
+    return DRAW_SCORE;
+  } else {
+    return LOSE_SCORE;
+  }
+}
+const getPlayScore = (input: string): PlayScore => {
+  switch (input) {
+    case 'A':
+    case 'X':
+      return ROCK_SCORE;
+    case 'B':
+    case 'Y':
+      return PAPER_SCORE;
+    case 'C':
+    case 'Z':
+      return SCISSORS_SCORE;
+    default:
+      console.error('Player has provided an invalid input!', input);
+      return INVALID_SCORE;
+  }
+}
 const getTotal = (input: string) => {
   try {
     // Total number of *our* points across all rounds.
@@ -24,40 +53,11 @@ const getTotal = (input: string) => {
     
       // This would look like opponent = 'A'; me = 'Y'
       const [opponent, me] = singleLine.trim().split(' ');
-      const getPlayScore = (input: string): PlayScore => {
-        switch (input) {
-          case 'A':
-          case 'X':
-            return ROCK_SCORE;
-          case 'B':
-          case 'Y':
-            return PAPER_SCORE;
-          case 'C':
-          case 'Z':
-            return SCISSORS_SCORE;
-          default:
-            console.error('Player has provided an invalid input!', input);
-            return INVALID_SCORE;
-        }
-      }
       const myScore: PlayScore = getPlayScore(me);
       const opponentScore: PlayScore = getPlayScore(opponent);
   
       // Make sure both plays are valid
       if (myScore !== INVALID_SCORE && opponentScore !== INVALID_SCORE) {
-        const calculateResultScore = (myPlay: PlayScore, opponentPlay: PlayScore) => {
-          if (
-            (myPlay === ROCK_SCORE && opponentPlay === SCISSORS_SCORE) ||
-            (myPlay === PAPER_SCORE && opponentPlay === ROCK_SCORE) ||
-            (myPlay === SCISSORS_SCORE && opponentPlay === PAPER_SCORE)
-          ) {
-            return WIN_SCORE;
-          } else if (myPlay === opponentPlay) {
-            return DRAW_SCORE;
-          } else {
-            return LOSE_SCORE;
-          }
-        }
         const roundPoints: number = myScore + calculateResultScore(myScore, opponentScore);
 
         return runningTotal += roundPoints;
