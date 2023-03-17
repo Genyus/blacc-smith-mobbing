@@ -6,10 +6,82 @@
 // Possible plays
 type PlayType = 'rock' | 'paper' | 'scissors' | null;
 // Possible scores
-type PlayScore = 1 | 2 | 3 | null;
+type PlayScore = 0 | 1 | 2 | 3;
 
-// Total number of *our* points across all rounds.
-let runningTotal: number = 0;
+const getTotal = (input: string) => {
+  try {
+    // Total number of *our* points across all rounds.
+    let runningTotal: number = 0;
+    
+    //TODO Split string by line
+    input.split('\n').filter(singleLine => singleLine.length > 0).forEach(singleLine => {
+      // So now what do we do? This is a single line...
+      // This would look like 'A Y', or 'B X', etc...
+    
+      // TODO Split by space
+      // This would look like opponent = 'A'; me = 'Y'
+      // Is opponent input always first?
+      const [opponent, me] = singleLine.trim().split(' ');
+      const getPlay = (input: string): PlayType => {
+        switch (input) {
+          case 'A':
+          case 'X':
+            return 'rock';
+          case 'B':
+          case 'Y':
+            return 'paper';
+          case 'C':
+          case 'Z':
+            return 'scissors';
+          default:
+            console.error('Player has provided an invalid input!', input);
+            return null;
+        }
+      }
+      const myPlay: PlayType = getPlay(me); // 'rock'
+      const opponentPlay: PlayType = getPlay(opponent); // 'scissors'
+  
+      // Make sure both plays are valid
+      if (myPlay && opponentPlay) {
+        const calculatePlayScore = (play: string): PlayScore => {
+          switch (play) {
+            case 'rock':
+              return 1;
+            case 'paper':
+              return 2;
+            case 'scissors':
+              return 3;
+            default:
+              console.error('Invalid score value!');
+          }
+          return 0;
+        }
+      
+        const calculateResultScore = (myPlay: PlayType, opponentPlay: PlayType) => {
+          if (
+            (myPlay === 'rock' && opponentPlay === 'scissors') ||
+            (myPlay === 'paper' && opponentPlay === 'rock') ||
+            (myPlay === 'scissors' && opponentPlay === 'paper')
+          ) {
+            return 6;
+          } else if (myPlay === opponentPlay) {
+            return 3;
+          } else {
+            return 0;
+          }
+        }
+        const roundPoints: number = calculatePlayScore(myPlay) + calculateResultScore(myPlay, opponentPlay);
+
+        runningTotal += roundPoints;
+      } else {
+        console.error('One or more invalid plays were passed, try Limbo instead!');
+      }
+    });
+    console.info('Running total after loop completes:', runningTotal);
+  } catch (err) {
+    console.error('Unexpected error while iterating over input.', err);
+  }
+}
 
 // Input values copied from https://adventofcode.com/2022/day/2/input
 const input: string = `C Z
@@ -2513,74 +2585,4 @@ A Z
 A Z
 B Y
 `
-
-try {
-  //TODO Split string by line
-  input.split('\n').filter(singleLine => singleLine.length > 0).forEach(singleLine => {
-    // So now what do we do? This is a single line...
-    // This would look like 'A Y', or 'B X', etc...
-    
-    // TODO Split by space
-    // This would look like opponent = 'A'; me = 'Y'
-    // Is opponent input always first?
-    const [opponent, me] = singleLine.trim().split(' ');
-    const getPlay = (input: string): PlayType => {
-      switch(input){
-        case 'A':
-        case 'X':
-          return 'rock';
-        case 'B':
-        case 'Y':
-          return 'paper';
-        case 'C':
-        case 'Z':
-          return 'scissors';
-        default:
-          console.error('Player has provided an invalid input!', input);
-          return null;
-      }
-    }
-    const myPlay: PlayType = getPlay(me); // 'rock'
-    const opponentPlay: PlayType = getPlay(opponent); // 'scissors'
-  
-    // Make sure both plays are valid
-    if (myPlay && opponentPlay) {
-      const calculatePlayScore = (play: string): PlayScore => {
-        switch(play) {
-          case 'rock':
-            return 1;
-          case 'paper':
-            return 2;
-          case 'scissors':
-            return 3;
-          default:
-            console.error('Invalid score value!');
-        }
-        return null;
-      }
-      
-      const calculateResultScore = (myPlay:PlayType, opponentPlay:PlayType) => {
-        if (
-          (myPlay === 'rock' && opponentPlay === 'scissors') ||
-          (myPlay === 'paper' && opponentPlay === 'rock') ||
-          (myPlay === 'scissors' && opponentPlay === 'paper')
-        ){
-          return 6;
-        } else if (myPlay === opponentPlay) {
-          return 3;
-        } else {
-          return 0;
-        }
-      }
-      const roundPoints:number = calculatePlayScore(myPlay) + calculateResultScore(myPlay, opponentPlay);
-
-      runningTotal += roundPoints;
-    } else {
-      console.error('One or more invalid plays were passed, try Limbo instead!');
-    }
-  });
-} catch (err) {
-  console.error('Unexpected error while iterating over input.', err);
-}
-
-console.info('Running total after loop completes:', runningTotal);
+getTotal(input);
