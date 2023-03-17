@@ -72,7 +72,7 @@ const getTotal = (input: string) => {
           return 0;
         }
       }, 0);
-    console.info("Running total after loop completes:", total);
+    console.info("Total:", total);
   } catch (err) {
     console.error("Unexpected error while iterating over input.", err);
   }
